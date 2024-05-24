@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
@@ -25,15 +25,12 @@ class ReservationsModelView(CreateView):
         reservation.date = formatted_date
 
         time = str(data.get('time'))
-        print("Time before parsing:", time)
         time_format = '%I:%M %p'
         formatted_time = datetime.strptime(time, time_format)
         reservation.time = formatted_time.time()
 
         reservation.save()
-        return render(self.request, 'success.html')
-        # return super().form_valid(form)
-
+        return redirect('pages:home')
 
     def form_invalid(self, form):
         return render(self.request, 'form-errors.html', context={'error': form.errors})
